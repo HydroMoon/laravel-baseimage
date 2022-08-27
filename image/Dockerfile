@@ -1,6 +1,22 @@
 ARG BASE_IMAGE=ubuntu:22.04
 FROM $BASE_IMAGE
 
+# Install php exts
+RUN apt update && apt install -y \
+    git curl \
+    libpng-dev libonig-dev \
+    libxml2-dev libzip-dev \
+    libjpeg-dev zip unzip \
+    libssl-dev pkg-config \
+    libcurl4-openssl-dev \
+    libfreetype6-dev libmagickwand-dev \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install required php extentions
+RUN pecl install mongodb && pecl install redis && docker-php-ext-enable mongodb redis
+
 ARG QEMU_ARCH
 #ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
 
