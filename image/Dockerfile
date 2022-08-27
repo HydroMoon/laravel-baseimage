@@ -9,7 +9,8 @@ RUN apt update && apt install -y \
     libssl-dev pkg-config \
     libcurl4-openssl-dev \
     libfreetype6-dev libmagickwand-dev \
-    && docker-php-ext-configure intl && docker-php-ext-install intl \
+    && docker-php-ext-configure pcntl --enable-pcntl \
+    && docker-php-ext-configure intl && docker-php-ext-install intl pcntl \
     && pecl install mongodb && pecl install redis && docker-php-ext-enable mongodb redis
 
 ARG QEMU_ARCH
