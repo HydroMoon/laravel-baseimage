@@ -8,10 +8,9 @@ RUN apt update && apt install -y \
     libjpeg-dev zip unzip \
     libssl-dev pkg-config \
     libcurl4-openssl-dev \
-    libfreetype6-dev libmagickwand-dev
-
-# Install required php extentions
-RUN pecl install mongodb && pecl install redis && docker-php-ext-enable mongodb redis
+    libfreetype6-dev libmagickwand-dev \
+    && docker-php-ext-configure intl && docker-php-ext-install intl \
+    && pecl install mongodb && pecl install redis && docker-php-ext-enable mongodb redis
 
 ARG QEMU_ARCH
 #ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
