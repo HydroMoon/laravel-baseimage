@@ -1,18 +1,14 @@
-ARG BASE_IMAGE=ubuntu:22.04
+ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 # Install php exts
 RUN apt update && apt install -y \
-    git curl \
     libpng-dev libonig-dev \
     libxml2-dev libzip-dev \
     libjpeg-dev zip unzip \
     libssl-dev pkg-config \
     libcurl4-openssl-dev \
-    libfreetype6-dev libmagickwand-dev \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    libfreetype6-dev libmagickwand-dev
 
 # Install required php extentions
 RUN pecl install mongodb && pecl install redis && docker-php-ext-enable mongodb redis
