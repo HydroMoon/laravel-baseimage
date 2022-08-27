@@ -7,7 +7,3 @@ minimal_apt_get_install='apt-get install -y --no-install-recommends'
 export DISABLE_SYSLOG=0
 export DISABLE_SSH=${DISABLE_SSH:-0}
 export DISABLE_CRON=${DISABLE_CRON:-0}
-
-# Set default env
-export NAME=hydromoon/laravel-base
-export BASE_IMAGE=php:8.1-fpm

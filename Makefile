@@ -1,4 +1,6 @@
-VERSION ?= focal-1.0.0-pre
+VERSION ?= 1.0.0
+BASE_IMAGE=php:8.1-fpm
+NAME=hydromoon/laravel-base
 ifdef BASE_IMAGE
 	BUILD_ARG = --build-arg BASE_IMAGE=$(BASE_IMAGE)
 	ifndef NAME
