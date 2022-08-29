@@ -1,7 +1,7 @@
 QEMU_ARCH=amd64
 PLATFORM=linux/amd64
-VERSION ?= 1.0.0
-BASE_IMAGE=php:8.1-fpm
+VERSION ?= php-7.4-1.0.0
+BASE_IMAGE=php:7.4-fpm
 NAME=hydromoon/laravel-base
 
 ifdef BASE_IMAGE
