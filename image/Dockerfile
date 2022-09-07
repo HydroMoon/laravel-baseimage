@@ -14,10 +14,7 @@ RUN apt update && apt install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install intl pcntl gd pdo pdo_mysql bcmath opcache exif zip \
     && pecl install mongodb && pecl install redis && pecl install imagick \
-    && docker-php-ext-enable mongodb redis imagick \
-    && apt-get -qy autoremove \
-    && apt-get clean \
-    && rm -r /var/lib/apt/lists/*
+    && docker-php-ext-enable mongodb redis imagick
 
 ARG QEMU_ARCH
 #ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
