@@ -4,7 +4,7 @@ source /bd_build/buildconfig
 set -x
 
 ## Often used tools.
-$minimal_apt_get_install curl git less vim nano psmisc gpg-agent dirmngr
+$minimal_apt_get_install curl vim nano
 
 ## This tool runs a command as another user and sets $HOME.
 cp /bd_build/bin/setuser /sbin/setuser
