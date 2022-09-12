@@ -1,5 +1,5 @@
 QEMU_ARCH=amd64
-PLATFORM=linux/amd64
+PLATFORM=linux/amd64,linux/arm64,linux/arm/v7
 NAME=hydromoon/laravel-base
 
 ifdef BASE_IMAGE
@@ -26,7 +26,7 @@ VERSION_ARG ?= $(VERSION)
 all: build
 
 build:
-	docker build --no-cache -t $(NAME):$(VERSION_ARG) $(BUILD_ARG) --build-arg QEMU_ARCH=$(QEMU_ARCH) --platform $(PLATFORM) --rm image
+	docker buildx build --no-cache -t $(NAME):$(VERSION_ARG) $(BUILD_ARG) --platform=$(PLATFORM) --rm
 
 build_multiarch:
 	env NAME=$(NAME) VERSION=$(VERSION_ARG) ./build-multiarch.sh
