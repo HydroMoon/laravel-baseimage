@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Preparing Docker Buildx...') {
             steps {
-                sh 'docker buildx inspect --bootstrap'
+                sh 'docker buildx create --use'
             }
         }
         stage('Building & pushing docker image with PHP7.4-FPM as base image') {
