@@ -26,7 +26,7 @@ VERSION_ARG ?= $(VERSION)
 all: build
 
 build:
-	docker buildx build --no-cache -t $(NAME):$(VERSION_ARG) $(BUILD_ARG) --platform=$(PLATFORM) --rm image
+	docker buildx build --no-cache -t $(NAME):$(VERSION_ARG) $(BUILD_ARG) --push --platform $(PLATFORM) --rm image
 
 build_multiarch:
 	env NAME=$(NAME) VERSION=$(VERSION_ARG) ./build-multiarch.sh
