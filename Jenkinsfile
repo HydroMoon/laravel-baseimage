@@ -8,7 +8,9 @@ pipeline {
         }
         stage('Preparing Docker Buildx...') {
             steps {
+                sh 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
                 sh 'docker buildx create --use'
+                sh 'docker buildx inspect --bootstrap'
             }
         }
         stage('Building & pushing docker image with PHP7.4-FPM as base image') {
