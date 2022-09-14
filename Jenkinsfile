@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-                        sh 'docker buildx use multiarch && docker buildx inspect --bootstrap'
+                        sh 'docker buildx create --use && docker buildx inspect --bootstrap'
                         sh 'BASE_IMAGE=php:7.4-fpm VERSION=php-7.4 make build'
                     }
                 }
