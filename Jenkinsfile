@@ -6,15 +6,11 @@ pipeline {
                 git 'https://github.com/HydroMoon/laravel-baseimage'
             }
         }
-        stage('Preparing Docker Buildx...') {
-            steps {
-                sh 'docker buildx use multiarch'
-            }
-        }
         stage('Building & pushing docker image with PHP7.4-FPM as base image') {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
+                        sh 'docker buildx use multiarch && docker buildx inspect --bootstrap'
                         sh 'BASE_IMAGE=php:7.4-fpm VERSION=php-7.4 make build'
                     }
                 }
