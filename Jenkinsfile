@@ -1,81 +1,36 @@
 pipeline {
     agent any
+    stage('Cloning from github (laravel-baseimage)') {
+        steps {
+            git 'https://github.com/HydroMoon/laravel-baseimage'
+        }
+    }
     stages {
-        stage('Cloning from github (laravel-baseimage)') {
-            steps {
-                git 'https://github.com/HydroMoon/laravel-baseimage'
-            }
-        }
-        stage('Building & pushing docker image with PHP7.4-FPM as base image') {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-                        sh 'docker buildx create --use && docker buildx inspect --bootstrap'
-                        sh 'BASE_IMAGE=php:7.4-fpm VERSION=php-7.4 make build'
+        stage('Build & Pushing Laravel Baseimage') {
+            matrix {
+                axes {
+                    axis {
+                        name 'BASE_IMAGE_AND_VERSION'
+                        values 'php:7.4-fpm;php-7.4', 'php:8-fpm;php-8.0', 'php:8.1-fpm;php-8.1'
+                    }
+                }
+                stages {
+                    stage('build') {
+                        steps {
+                            script {
+                                withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
+                                    sh 'docker buildx create --use && docker buildx inspect --bootstrap'
+                                    sh '''#!/bin/bash
+                                        IN=${BASE_IMAGE_AND_VERSION}
+                                        arrIN=(${IN//;/ })
+                                        BASE_IMAGE=${arrIN[0]} VERSION=${arrIN[1]} make build
+                                    '''
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
-        // stage('Pushing hydromoon/laravel-base:php-7.4 image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-        //                 customImage = docker.image('hydromoon/laravel-base:php-7.4')
-        //                 customImage.push()
-        //             }
-        //         }
-        //     }
-        // }
-        stage('Building docker image with PHP8.0-FPM as base image') {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-                        sh 'BASE_IMAGE=php:8-fpm VERSION=php-8.0 make build'
-                    }
-                }
-            }
-        }
-        // stage('Pushing hydromoon/laravel-base:php-8.0 image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-        //                 customImage = docker.image('hydromoon/laravel-base:php-8.0')
-        //                 customImage.push()
-        //             }
-        //         }
-        //     }
-        // }
-        stage('Building docker image with PHP8.1-FPM as base image') {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-                        sh 'BASE_IMAGE=php:8.1-fpm VERSION=php-8.1 make build'
-                    }
-                }
-            }
-        }
-        // stage('Pushing hydromoon/laravel-base:php-8.1 image') {
-        //     steps {
-        //         script {
-        //             withDockerRegistry(credentialsId: 'DockerCredentials', url: 'https://index.docker.io/v1/') {
-        //                 customImage = docker.image('hydromoon/laravel-base:php-8.1')
-        //                 customImage.push()
-        //             }
-        //         }
-        //     }
-        // }
-        stage('Clean dangling images') {
-          steps {
-            sh '''#!/bin/sh
-                    dangling=$(docker images --filter dangling=true -q --no-trunc)
-                    if [ -z "$dangling" ]; then
-                        echo "No dangling images found."
-                    else
-                        docker rmi -f $dangling
-                        echo "All dangling images deleted successfully!"
-                    fi
-            '''
-          }
         }
     }
     post {
