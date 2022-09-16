@@ -1,11 +1,11 @@
 pipeline {
     agent any
-    stage('Cloning from github (laravel-baseimage)') {
-        steps {
-            git 'https://github.com/HydroMoon/laravel-baseimage'
-        }
-    }
     stages {
+        stage('Cloning from github (laravel-baseimage)') {
+            steps {
+                git 'https://github.com/HydroMoon/laravel-baseimage'
+            }
+        }
         stage('Build & Pushing Laravel Baseimage') {
             matrix {
                 axes {
