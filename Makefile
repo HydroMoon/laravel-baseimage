@@ -1,5 +1,5 @@
 QEMU_ARCH=amd64
-PLATFORM=linux/amd64,linux/arm64,linux/arm/v7
+PLATFORM=linux/amd64,linux/arm64
 NAME=hydromoon/laravel-base
 
 ifdef BASE_IMAGE
