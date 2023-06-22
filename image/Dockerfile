@@ -12,7 +12,7 @@ RUN apt update && apt install -y \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install intl pcntl gd pdo pdo_mysql bcmath opcache exif zip \
+    && docker-php-ext-install mysqli intl pcntl gd pdo pdo_mysql bcmath opcache exif zip \
     && pecl install mongodb && pecl install redis && pecl install imagick \
     && docker-php-ext-enable mongodb redis imagick
 
