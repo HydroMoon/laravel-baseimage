@@ -11,7 +11,7 @@ pipeline {
                 axes {
                     axis {
                         name 'BASE_IMAGE_AND_VERSION'
-                        values 'php:7.4-fpm;php-7.4', 'php:8-fpm;php-8.0', 'php:8.1-fpm;php-8.1'
+                        values 'php:7.4-fpm;php-7.4', 'php:8-fpm;php-8.0', 'php:8.1-fpm;php-8.1', 'php:8.2-fpm;php-8.2'
                     }
                 }
                 stages {
