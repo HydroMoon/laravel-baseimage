@@ -1,6 +1,10 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
+# Install latest security patches
+RUN echo "deb http://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware" > /etc/apt/sources.list
+RUN apt-get update && apt-get upgrade
+
 # Install php exts
 RUN apt update && apt install -y \
     libpng-dev libonig-dev \
