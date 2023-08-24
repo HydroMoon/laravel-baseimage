@@ -37,11 +37,5 @@ pipeline {
         always {
             cleanWs()
         }
-        success {
-            slackSend channel: '#jenkins-pipelines', color: 'good', message: 'Build job completed successfully!', tokenCredentialId: 'Slack Token'
-        }
-        failure {
-            slackSend channel: '#jenkins-pipelines', color: 'danger', message: 'Build job failed', tokenCredentialId: 'Slack Token'
-        }
     }
 }
