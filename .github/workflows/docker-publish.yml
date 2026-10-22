@@ -1,0 +1,64 @@
+name: Build & Push Laravel Baseimage
+
+# Port of the Jenkinsfile pipeline to GitHub Actions.
+# Requires repo secrets: DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (a Docker Hub access token).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+    paths:
+      - "image/**"
+      - ".github/workflows/docker-publish.yml"
+  pull_request:
+    paths:
+      - "image/**"
+
+env:
+  IMAGE_NAME: hydromoon/laravel-base
+  PLATFORMS: linux/amd64,linux/arm64
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci-skip]')"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Same matrix as the Jenkinsfile (BASE_IMAGE;VERSION), now pinned to exact patch releases.
+          - php_version: "8.1.34"
+            tag: php-8.1
+          - php_version: "8.2.35"
+            tag: php-8.2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: image
+          platforms: ${{ env.PLATFORMS }}
+          build-args: |
+            BASE_IMAGE=php:${{ matrix.php_version }}-fpm-bookworm
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ matrix.tag }}
+            ${{ env.IMAGE_NAME }}:php-${{ matrix.php_version }}
+          cache-from: type=gha,scope=${{ matrix.tag }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.tag }}
