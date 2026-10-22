@@ -16,7 +16,7 @@ on:
 
 env:
   IMAGE_NAME: hydromoon/laravel-base
-  PLATFORMS: linux/amd64,linux/arm64
+  PLATFORMS: linux/amd64
 
 jobs:
   build:
