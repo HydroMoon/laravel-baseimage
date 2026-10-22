@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=php:8.2-fpm-bookworm
 FROM $BASE_IMAGE
 
 # Install latest security patches
@@ -17,7 +17,14 @@ RUN apt update && apt install -y \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install mysqli intl pcntl gd pdo pdo_mysql bcmath opcache exif zip \
-    && pecl install mongodb && pecl install redis && pecl install imagick \
+    && pecl channel-update pecl.php.net \
+    && for ext in mongodb redis imagick; do \
+         for i in 1 2 3 4 5; do \
+           pecl install $ext && break; \
+           [ "$i" = 5 ] && exit 1; \
+           echo "pecl install $ext failed, retrying ($i/5)"; pecl clear-cache; sleep 15; \
+         done; \
+       done \
     && docker-php-ext-enable mongodb redis imagick
 
 ARG QEMU_ARCH
